@@ -1,0 +1,30 @@
+.ds-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--ds-color-border);
+}
+
+.ds-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-xs);
+  padding: var(--ds-space-md) var(--ds-space-lg);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  color: var(--ds-color-text-secondary);
+  font-family: var(--ds-font-family-body);
+  font-weight: 400;
+  margin-bottom: -1px;
+}
+
+.ds-tab--selected {
+  color: var(--ds-color-accent);
+  border-bottom-color: var(--ds-color-accent);
+  font-weight: 600;
+}
+
+.ds-tab svg {
+  width: 16px;
+  height: 16px;
+}

@@ -1,0 +1,46 @@
+.ds-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-sm);
+  cursor: pointer;
+  padding: var(--ds-space-xs) 0;
+  background: none;
+  border: none;
+  font-family: var(--ds-font-family-body);
+  color: var(--ds-color-text-primary);
+}
+
+.ds-radio:disabled {
+  cursor: not-allowed;
+  color: var(--ds-color-text-disabled);
+}
+
+.ds-radio__circle {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--ds-color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-radio--selected .ds-radio__circle {
+  border-color: var(--ds-color-brand);
+}
+
+.ds-radio:disabled .ds-radio__circle {
+  border-color: var(--ds-color-text-disabled);
+}
+
+.ds-radio__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ds-color-brand);
+}
+
+.ds-radio:disabled .ds-radio__dot {
+  background: var(--ds-color-text-disabled);
+}

@@ -1,0 +1,19 @@
+.ds-card {
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-lg);
+  padding: var(--ds-space-lg);
+  text-align: left;
+}
+
+.ds-card--elevated {
+  box-shadow: var(--ds-elevation-3);
+}
+
+button.ds-card {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  font-family: var(--ds-font-family-body);
+  transition: box-shadow 0.12s ease;
+}

@@ -1,0 +1,10 @@
+.ds-root {
+  font-family: var(--ds-font-family-body);
+  color: var(--ds-color-text-primary);
+  background-color: var(--ds-color-background);
+}
+
+.ds-root,
+.ds-root * {
+  box-sizing: border-box;
+}

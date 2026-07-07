@@ -1,0 +1,35 @@
+.ds-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--ds-color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--ds-space-lg);
+}
+
+.ds-modal {
+  background: var(--ds-color-surface);
+  border-radius: var(--ds-radius-lg);
+  padding: var(--ds-space-xl);
+  max-width: 480px;
+  width: 100%;
+  box-shadow: var(--ds-elevation-4);
+}
+
+.ds-modal__title {
+  color: var(--ds-color-text-primary);
+  margin-bottom: var(--ds-space-lg);
+}
+
+.ds-modal__body {
+  color: var(--ds-color-text-secondary);
+}
+
+.ds-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ds-space-sm);
+  margin-top: var(--ds-space-xl);
+}

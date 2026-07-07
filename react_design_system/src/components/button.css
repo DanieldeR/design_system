@@ -1,0 +1,96 @@
+.ds-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-sm);
+  font-family: var(--ds-font-family-body);
+  font-weight: 600;
+  border-radius: var(--ds-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+  white-space: nowrap;
+}
+
+.ds-button:disabled {
+  cursor: not-allowed;
+}
+
+.ds-button--expand {
+  width: 100%;
+}
+
+/* Sizes */
+.ds-button--small {
+  padding: var(--ds-space-sm) var(--ds-space-md);
+  font-size: 12px;
+}
+.ds-button--medium {
+  padding: var(--ds-space-md) var(--ds-space-lg);
+  font-size: 14px;
+}
+.ds-button--large {
+  padding: var(--ds-space-lg) var(--ds-space-xl);
+  font-size: 16px;
+}
+
+/* Variants */
+.ds-button--primary {
+  background: var(--ds-color-brand);
+  color: var(--ds-color-on-brand);
+}
+.ds-button--primary:disabled {
+  background: var(--ds-color-border);
+  color: var(--ds-color-text-disabled);
+}
+
+.ds-button--secondary {
+  background: var(--ds-color-surface-variant);
+  color: var(--ds-color-text-primary);
+  border-color: var(--ds-color-border);
+}
+.ds-button--secondary:disabled {
+  color: var(--ds-color-text-disabled);
+}
+
+.ds-button--outline {
+  background: transparent;
+  color: var(--ds-color-brand);
+  border-color: var(--ds-color-brand);
+}
+.ds-button--outline:disabled {
+  color: var(--ds-color-text-disabled);
+  border-color: var(--ds-color-border);
+}
+
+.ds-button--ghost {
+  background: transparent;
+  color: var(--ds-color-text-primary);
+}
+.ds-button--ghost:disabled {
+  color: var(--ds-color-text-disabled);
+}
+
+.ds-button--danger {
+  background: var(--ds-color-danger);
+  color: var(--ds-color-on-brand);
+}
+.ds-button--danger:disabled {
+  background: var(--ds-color-border);
+  color: var(--ds-color-text-disabled);
+}
+
+.ds-button__spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: ds-spin 0.6s linear infinite;
+}
+
+@keyframes ds-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

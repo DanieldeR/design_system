@@ -1,0 +1,13 @@
+{
+  "projectId": "8c36c7f0-cb14-4110-b17e-9ad994f4bfaa",
+  "pkg": "design-system",
+  "globalName": "DesignSystem",
+  "shape": "package",
+  "buildCmd": "npm run build",
+  "cssEntry": "dist/styles.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "DSModal": { "cardMode": "single", "viewport": "480x420" },
+    "DSToastViewport": { "cardMode": "single", "viewport": "360x160", "primaryStory": "Success" }
+  }
+}
