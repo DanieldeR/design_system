@@ -52,4 +52,15 @@ abstract final class DSIconPalette {
   /// Fraction of the canvas radius that a mark must stay inside to survive
   /// both Android's adaptive-icon crop and a `maskable` web icon.
   static const double maskSafeRadiusFraction = 0.283;
+
+  /// Corner radius of a self-rounded icon tile, as a fraction of the tile's
+  /// side.
+  ///
+  /// Applied only to the surfaces an app rounds itself: the web `any` icons,
+  /// the favicon and the Android legacy mipmaps. The maskable web icons and
+  /// the Android adaptive layers stay full-bleed and square, because the
+  /// launcher supplies its own mask there and a self-rounded corner would
+  /// either be cropped away or leave a gap. Deliberately tight, echoing the
+  /// `DSRadius` scale rather than the platform's softer default.
+  static const double tileCornerFraction = 0.148;
 }

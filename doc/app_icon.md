@@ -33,12 +33,17 @@ source of truth for those colours; the canonical values live in code as
 - **Mask safety:** keep the mark inside a centred circle of radius
   `0.283 × canvas` so it survives both Android's adaptive-icon crop and a
   `maskable` web icon.
+- **Corner radius:** the surfaces an app rounds itself — the web `any` icons,
+  the favicon and the Android legacy mipmaps — use `0.148 × side`. The
+  maskable web icons and the Android adaptive layers stay full-bleed and
+  square; the launcher masks those itself, so a self-rounded corner there
+  would only be cropped away or leave a gap.
 
 ## What stays per-app
 
-The mark geometry, and the corner radius of a self-rounded tile. Mentee CRM
-deliberately uses a tighter corner than the platform default to echo the
-`DSRadius` scale; the other apps let the platform mask do the rounding.
+Only the mark geometry. The ground, the accent and the corner radius are all
+shared — an app on a home screen next to its siblings should look like the
+same hand made all of them.
 
 ## Regenerating
 
