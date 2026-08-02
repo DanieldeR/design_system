@@ -12,6 +12,7 @@ export 'src/tokens/ds_typography.dart';
 export 'src/theme/ds_theme.dart';
 
 // Core widgets
+export 'src/widgets/ds_auth_scaffold.dart';
 export 'src/widgets/ds_badge.dart';
 export 'src/widgets/ds_button.dart';
 export 'src/widgets/ds_card.dart';
