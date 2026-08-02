@@ -7,6 +7,10 @@ Widget _wrap(Widget child) {
   return MaterialApp(home: DSTheme(child: Scaffold(body: Center(child: child))));
 }
 
+Widget _wrapScreen(Widget child) {
+  return MaterialApp(home: DSTheme(child: child));
+}
+
 void main() {
   testWidgets('DSButton renders label and responds to taps', (tester) async {
     var pressed = false;
@@ -56,5 +60,62 @@ void main() {
     expect(find.text('Two'), findsOneWidget);
     await tester.tap(find.text('Two'));
     expect(selected, 1);
+  });
+
+  testWidgets('DSAuthScaffold renders header, mark and actions', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapScreen(
+        DSAuthScaffold(
+          icon: Icons.lock_outline,
+          title: 'Welcome back',
+          subtitle: 'Sign in to continue',
+          children: [DSButton(label: 'Sign in', onPressed: () {})],
+        ),
+      ),
+    );
+
+    expect(find.text('Welcome back'), findsOneWidget);
+    expect(find.text('Sign in to continue'), findsOneWidget);
+    expect(find.byIcon(Icons.lock_outline), findsOneWidget);
+    expect(find.text('Sign in'), findsOneWidget);
+  });
+
+  testWidgets('DSAuthScaffold shows the error banner above its actions', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapScreen(
+        DSAuthScaffold(
+          title: 'Welcome back',
+          errorMessage: 'Wrong password',
+          children: [DSButton(label: 'Sign in', onPressed: () {})],
+        ),
+      ),
+    );
+
+    expect(find.byType(DSAuthErrorBanner), findsOneWidget);
+    expect(find.text('Wrong password'), findsOneWidget);
+    expect(find.byIcon(Icons.error_outline), findsOneWidget);
+
+    final bannerY = tester.getTopLeft(find.byType(DSAuthErrorBanner)).dy;
+    final buttonY = tester.getTopLeft(find.text('Sign in')).dy;
+    expect(bannerY, lessThan(buttonY));
+  });
+
+  testWidgets('DSAuthScaffold hides the error banner when there is no error', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapScreen(
+        DSAuthScaffold(
+          title: 'Welcome back',
+          children: [DSButton(label: 'Sign in', onPressed: () {})],
+        ),
+      ),
+    );
+
+    expect(find.byType(DSAuthErrorBanner), findsNothing);
   });
 }
