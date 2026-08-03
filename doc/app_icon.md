@@ -57,3 +57,4 @@ generator and re-run it:
 | Learning Canvas | `node tool/app_icon/build_icons.mjs` |
 | Migraine Buddy | `python3 design/icons/generate.py && python3 design/icons/rasterize.py` |
 | Speed Math | `python3 tools/generate_icons.py` |
+| Strength | `node tool/app_icon/build_icons.mjs` |
