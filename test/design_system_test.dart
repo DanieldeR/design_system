@@ -118,4 +118,25 @@ void main() {
 
     expect(find.byType(DSAuthErrorBanner), findsNothing);
   });
+
+  testWidgets('an expanded DSButton truncates instead of overflowing', (
+    tester,
+  ) async {
+    // 90px is narrower than the label at any size; the row must not throw.
+    await tester.pumpWidget(
+      _wrap(
+        SizedBox(
+          width: 90,
+          child: DSButton(
+            label: 'A label far too long for this width',
+            expand: true,
+            onPressed: () {},
+          ),
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    final text = tester.widget<Text>(find.byType(Text));
+    expect(text.overflow, TextOverflow.ellipsis);
+  });
 }

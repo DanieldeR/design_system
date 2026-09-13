@@ -149,11 +149,20 @@ class DSButton extends StatelessWidget {
                 Icon(icon, size: 16, color: foreground),
                 const SizedBox(width: DSSpacing.sm),
               ],
-              Text(
-                label,
-                style: _textStyle(
-                  theme,
-                ).copyWith(color: foreground, fontWeight: FontWeight.w600),
+              // An expanded button is given its width by its parent and
+              // must live inside it; a label that cannot fit truncates
+              // rather than overflowing the row. A min-sized button keeps
+              // its natural width, so the Flexible is a no-op there.
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: _textStyle(
+                    theme,
+                  ).copyWith(color: foreground, fontWeight: FontWeight.w600),
+                ),
               ),
             ],
           ),
