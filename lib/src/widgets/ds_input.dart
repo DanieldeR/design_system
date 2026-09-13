@@ -6,6 +6,18 @@ import '../tokens/ds_spacing.dart';
 /// A single-line text input following the design system's visual
 /// language. Wraps [TextField] but replaces its decoration with
 /// design-system tokens.
+///
+/// Resting, focused and errored are three different colours on an
+/// emissive panel and one colour on e-ink, so under the e-ink theme
+/// they become three different **weights** — 1.5px resting, 2px
+/// focused, 3px errored. Three steps is the most a reader can reliably
+/// tell apart on paper, which is also why there is no fourth state.
+///
+/// A note for callers on e-ink: [placeholder] is grey by definition,
+/// and grey is the one thing this theme is trying to avoid inside a
+/// field. Put the format in the [label] ("Date — YYYY-MM-DD") rather
+/// than ghosting it into the input, and use [helperText] for anything
+/// that has to survive the user starting to type.
 class DSInput extends StatelessWidget {
   const DSInput({
     super.key,
@@ -39,6 +51,7 @@ class DSInput extends StatelessWidget {
     final theme = DSTheme.maybeOf(context) ?? DSThemeData.light;
     final colors = theme.colors;
     final hasError = errorText != null && errorText!.isNotEmpty;
+    final radius = BorderRadius.circular(theme.shape.md);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,35 +89,63 @@ class DSInput extends StatelessWidget {
               vertical: DSSpacing.md,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(DSRadius.md),
-              borderSide: BorderSide(color: colors.border),
+              borderRadius: radius,
+              borderSide: BorderSide(
+                color: colors.border,
+                width: theme.strokes.regular,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(DSRadius.md),
+              borderRadius: radius,
               borderSide: BorderSide(
                 color: hasError ? colors.danger : colors.border,
+                width: hasError
+                    ? theme.strokes.emphasis
+                    : theme.strokes.regular,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(DSRadius.md),
+              borderRadius: radius,
               borderSide: BorderSide(
                 color: hasError ? colors.danger : colors.accent,
-                width: 1.5,
+                width: hasError
+                    ? theme.strokes.emphasis
+                    : theme.strokes.heavy,
               ),
             ),
             disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(DSRadius.md),
-              borderSide: BorderSide(color: colors.border),
+              borderRadius: radius,
+              borderSide: BorderSide(
+                color: colors.textDisabled,
+                width: theme.strokes.regular,
+              ),
             ),
           ),
         ),
         if (hasError || helperText != null) ...[
           const SizedBox(height: DSSpacing.xs),
-          Text(
-            hasError ? errorText! : helperText!,
-            style: theme.typography.bodySmall.copyWith(
-              color: hasError ? colors.danger : colors.textSecondary,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // On e-ink the error colour is the same ink as the
+              // helper colour, so the message needs a glyph to say
+              // which one it is. Elsewhere the red already says it.
+              if (hasError && theme.isEInk) ...[
+                Icon(Icons.error_outline, size: 16, color: colors.danger),
+                const SizedBox(width: DSSpacing.xs),
+              ],
+              Expanded(
+                child: Text(
+                  hasError ? errorText! : helperText!,
+                  style: theme.typography.bodySmall.copyWith(
+                    color: hasError ? colors.danger : colors.textSecondary,
+                    fontWeight: hasError && theme.isEInk
+                        ? FontWeight.w700
+                        : null,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ],

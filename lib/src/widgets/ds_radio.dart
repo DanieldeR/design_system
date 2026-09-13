@@ -29,29 +29,29 @@ class DSRadio<T> extends StatelessWidget {
 
     return InkWell(
       onTap: disabled ? null : () => onChanged!(value),
-      borderRadius: BorderRadius.circular(DSRadius.full),
+      borderRadius: BorderRadius.circular(theme.shape.full),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: DSSpacing.xs),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 20,
-              height: 20,
+              width: 22,
+              height: 22,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: selected
                       ? (disabled ? colors.textDisabled : colors.brand)
                       : (disabled ? colors.textDisabled : colors.border),
-                  width: 1.5,
+                  width: theme.strokes.heavy,
                 ),
               ),
               child: selected
                   ? Center(
                       child: Container(
-                        width: 10,
-                        height: 10,
+                        width: 12,
+                        height: 12,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: disabled ? colors.textDisabled : colors.brand,

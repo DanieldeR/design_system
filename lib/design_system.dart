@@ -6,6 +6,7 @@ library;
 export 'src/tokens/ds_colors.dart';
 export 'src/tokens/ds_icon_palette.dart';
 export 'src/tokens/ds_spacing.dart';
+export 'src/tokens/ds_surface.dart';
 export 'src/tokens/ds_typography.dart';
 
 // Theme

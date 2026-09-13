@@ -71,8 +71,15 @@ class DSAuthScaffold extends StatelessWidget {
             height: markSize,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: colors.brand.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(DSRadius.lg),
+              // A 10%-alpha brand tint quantises to an indistinct grey
+              // on e-ink and reads as a dirty patch behind the icon.
+              // Swap it for the wash fill and a rule, which are both
+              // on the panel's native grey ramp.
+              color: theme.isEInk ? colors.surfaceVariant : colors.brand.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(theme.shape.lg),
+              border: theme.isEInk
+                  ? Border.all(color: colors.border, width: theme.strokes.regular)
+                  : null,
             ),
             child: Icon(icon, size: 32, color: colors.brand),
           )
@@ -150,9 +157,20 @@ class DSAuthErrorBanner extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(DSSpacing.md),
         decoration: BoxDecoration(
-          color: colors.danger.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(DSRadius.md),
-          border: Border.all(color: colors.danger.withValues(alpha: 0.4)),
+          // Same problem, higher stakes: an error banner has to be the
+          // loudest thing on the page, and two alpha tints of the same
+          // ink are the quietest thing this system can draw on paper.
+          // On e-ink it becomes a wash panel inside an emphasis rule.
+          color: theme.isEInk
+              ? colors.surfaceVariant
+              : colors.danger.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(theme.shape.md),
+          border: Border.all(
+            color: theme.isEInk
+                ? colors.danger
+                : colors.danger.withValues(alpha: 0.4),
+            width: theme.isEInk ? theme.strokes.emphasis : theme.strokes.regular,
+          ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -6,6 +6,14 @@ import 'ds_button.dart';
 
 /// A centered modal dialog surface styled from design tokens. Use
 /// [DSModal.show] to present it; the widget itself is the dialog body.
+///
+/// On e-ink this stops being a *layer* and becomes a *page*. The
+/// barrier is opaque paper rather than a translucent black scrim,
+/// because a scrim is a large field of mid-grey — the single worst
+/// thing to put on an electrophoretic panel, since it is simultaneously
+/// the lowest-contrast tone, the slowest to settle, and the most
+/// visible source of residue when it clears. Nothing shows through, so
+/// the dialog carries a heavy outline to say where it ends.
 class DSModal extends StatelessWidget {
   const DSModal({
     super.key,
@@ -26,8 +34,10 @@ class DSModal extends StatelessWidget {
     required Widget child,
     List<Widget> actions = const [],
   }) {
+    final theme = DSTheme.maybeOf(context) ?? DSThemeData.light;
     return showDialog<T>(
       context: context,
+      barrierColor: theme.colors.overlay,
       builder: (context) =>
           DSModal(title: title, actions: actions, child: child),
     );
@@ -40,8 +50,15 @@ class DSModal extends StatelessWidget {
 
     return Dialog(
       backgroundColor: colors.surface,
+      elevation: theme.isEInk ? 0 : null,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(DSRadius.lg),
+        borderRadius: BorderRadius.circular(theme.shape.lg),
+        side: theme.isEInk
+            ? BorderSide(
+                color: colors.border,
+                width: theme.strokes.emphasis,
+              )
+            : BorderSide.none,
       ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 480),

@@ -1,6 +1,14 @@
 import React, { createContext, useContext } from "react";
 
-export type DSBrightness = "light" | "dark";
+/**
+ * `"eink"` is not a third colour scheme — it is a different display
+ * class. It squares off every corner, removes every shadow, zeroes
+ * every transition, widens the stroke scale, enlarges the type, and
+ * collapses the palette to eight true greys on the panel's native
+ * 16-level ramp. See `doc/eink.md` for why each of those follows from
+ * the hardware.
+ */
+export type DSBrightness = "light" | "dark" | "eink";
 
 const DSBrightnessContext = createContext<DSBrightness>("light");
 
@@ -14,8 +22,9 @@ export interface DSThemeProps {
 
 /**
  * Provides design tokens to the subtree by setting `data-ds-theme` on a
- * wrapping element — the stylesheet's `[data-ds-theme="dark"]` rules
- * pick this up. Wrap your app's root (or a subtree) in `DSTheme`.
+ * wrapping element — the stylesheet's `[data-ds-theme="dark"]` and
+ * `[data-ds-theme="eink"]` rules pick this up. Wrap your app's root (or
+ * a subtree) in `DSTheme`.
  */
 export function DSTheme({
   brightness = "light",

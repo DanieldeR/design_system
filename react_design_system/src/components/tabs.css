@@ -1,6 +1,6 @@
 .ds-tabs {
   display: flex;
-  border-bottom: 1px solid var(--ds-color-border);
+  border-bottom: var(--ds-stroke-hairline) solid var(--ds-color-border);
 }
 
 .ds-tab {
@@ -27,4 +27,22 @@
 .ds-tab svg {
   width: 16px;
   height: 16px;
+}
+
+/* The emissive themes mark the active tab in copper. On e-ink that
+ * copper is the same ink as the strip's own bottom rule, so selection
+ * moves to rule weight plus label weight.
+ *
+ * Inverting the selected tab would be louder, and it is the wrong
+ * answer: it fills a large region with ink and has to clear it again on
+ * the next switch — the slowest kind of repaint and the one that leaves
+ * the most residue. An underline moves a few hundred pixels instead of
+ * a few thousand and reads just as clearly. */
+[data-ds-theme="eink"] .ds-tab {
+  min-height: var(--ds-touch-target);
+}
+
+[data-ds-theme="eink"] .ds-tab--selected {
+  border-bottom-width: var(--ds-stroke-emphasis);
+  font-weight: 700;
 }

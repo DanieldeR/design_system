@@ -6,9 +6,9 @@
   font-family: var(--ds-font-family-body);
   font-weight: 600;
   border-radius: var(--ds-radius-md);
-  border: 1px solid transparent;
+  border: var(--ds-stroke-regular) solid transparent;
   cursor: pointer;
-  transition: opacity 0.12s ease;
+  transition: opacity var(--ds-motion-fast) ease;
   white-space: nowrap;
 }
 
@@ -93,4 +93,42 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* An unruled label reads as a button on an emissive panel because it
+ * picks up hover and a ripple. Neither exists on paper, where a ghost
+ * button would be indistinguishable from body text. */
+[data-ds-theme="eink"] .ds-button--ghost {
+  border-color: var(--ds-color-border);
+}
+[data-ds-theme="eink"] .ds-button--ghost:disabled {
+  border-color: var(--ds-color-text-disabled);
+}
+
+/* The filled variants grey out by swapping their fill for
+ * `--ds-color-border`. That works while border is a light grey, but on
+ * e-ink the border role is full black — so a disabled button would
+ * render as the single loudest element on the page, the exact opposite
+ * of what "disabled" means. Grey out to the wash fill instead. */
+[data-ds-theme="eink"] .ds-button--primary:disabled,
+[data-ds-theme="eink"] .ds-button--danger:disabled {
+  background: var(--ds-color-surface-variant);
+  color: var(--ds-color-text-disabled);
+  border-color: var(--ds-color-text-disabled);
+}
+
+/* Every control clears the enlarged hit target. */
+[data-ds-theme="eink"] .ds-button {
+  min-height: var(--ds-touch-target);
+}
+
+/* An indeterminate spinner never stops asking the panel to repaint, so
+ * it holds the refresh pipeline busy for exactly as long as the app can
+ * least afford it. The kill switch already froze the rotation; this
+ * turns what is left into a deliberate static "pending" mark rather
+ * than a ring stopped mid-spin. */
+[data-ds-theme="eink"] .ds-button__spinner {
+  animation: none;
+  border-radius: 0;
+  border-right-color: currentColor;
 }

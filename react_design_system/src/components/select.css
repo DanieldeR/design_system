@@ -13,7 +13,7 @@
 .ds-select-field__control {
   width: 100%;
   background: var(--ds-color-surface);
-  border: 1px solid var(--ds-color-border);
+  border: var(--ds-stroke-regular) solid var(--ds-color-border);
   border-radius: var(--ds-radius-md);
   padding: var(--ds-space-md);
   font-family: var(--ds-font-family-body);
@@ -24,18 +24,24 @@
   background-repeat: no-repeat;
   background-position: right var(--ds-space-md) center;
   padding-right: var(--ds-space-xxl);
-  transition: border-color 0.12s ease;
+  transition: border-color var(--ds-motion-fast) ease;
 }
 
 .ds-select-field__control:focus {
   border-color: var(--ds-color-accent);
-  border-width: 1.5px;
-  padding: calc(var(--ds-space-md) - 0.5px);
-  padding-right: calc(var(--ds-space-xxl) - 0.5px);
+  border-width: var(--ds-stroke-heavy);
   outline: none;
 }
 
 .ds-select-field__control:disabled {
   background-color: var(--ds-color-surface-variant);
   color: var(--ds-color-text-disabled);
+}
+
+[data-ds-theme="eink"] .ds-select-field__control {
+  min-height: var(--ds-touch-target);
+  /* The default chevron is baked into a data URI with the old warm-grey
+   * stroke, which is off the panel's grey ramp and dithers. Swap it for
+   * one drawn in full ink. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
 }

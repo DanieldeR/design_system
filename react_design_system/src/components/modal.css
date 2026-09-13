@@ -33,3 +33,13 @@
   gap: var(--ds-space-sm);
   margin-top: var(--ds-space-xl);
 }
+
+/* On e-ink a modal stops being a layer and becomes a page. The barrier
+ * is opaque paper rather than a translucent scrim, because a scrim is a
+ * large field of mid-grey — simultaneously the lowest-contrast tone,
+ * the slowest to settle, and the most visible source of residue when it
+ * clears. Nothing shows through, so the dialog needs an outline to say
+ * where it ends. */
+[data-ds-theme="eink"] .ds-modal {
+  border: var(--ds-stroke-emphasis) solid var(--ds-color-border);
+}

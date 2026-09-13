@@ -36,3 +36,35 @@
   background: color-mix(in srgb, var(--ds-color-info) 12%, transparent);
   color: var(--ds-color-info);
 }
+
+/* On e-ink the six tones collapse to three salience levels.
+ *
+ * Six tinted fills all quantise to the same grey on a monochrome panel.
+ * Rather than render six pills that look identical, tone maps to *how
+ * loudly the badge should read* rather than *what it means*:
+ *
+ *   danger, warning        inverted      "act on this"
+ *   brand, success, info   ruled         "this is a status"
+ *   neutral                wash          "this is metadata"
+ *
+ * The consequence for callers is direct: the meaning has to be in the
+ * label. `Active` still works because the word carries it; a bare `3`
+ * does not, because on paper it is just an inverted 3. */
+[data-ds-theme="eink"] .ds-badge--danger,
+[data-ds-theme="eink"] .ds-badge--warning {
+  background: var(--ds-color-brand);
+  color: var(--ds-color-on-brand);
+}
+
+[data-ds-theme="eink"] .ds-badge--brand,
+[data-ds-theme="eink"] .ds-badge--success,
+[data-ds-theme="eink"] .ds-badge--info {
+  background: var(--ds-color-surface);
+  color: var(--ds-color-text-primary);
+  border: var(--ds-stroke-regular) solid var(--ds-color-border);
+}
+
+[data-ds-theme="eink"] .ds-badge--neutral {
+  background: var(--ds-color-surface-variant);
+  color: var(--ds-color-text-primary);
+}

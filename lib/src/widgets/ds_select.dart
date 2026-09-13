@@ -46,11 +46,15 @@ class DSSelect<T> extends StatelessWidget {
           const SizedBox(height: DSSpacing.xs),
         ],
         Container(
+          constraints: BoxConstraints(minHeight: theme.minTouchTarget),
           padding: const EdgeInsets.symmetric(horizontal: DSSpacing.md),
           decoration: BoxDecoration(
             color: disabled ? colors.surfaceVariant : colors.surface,
-            borderRadius: BorderRadius.circular(DSRadius.md),
-            border: Border.all(color: colors.border),
+            borderRadius: BorderRadius.circular(theme.shape.md),
+            border: Border.all(
+              color: disabled ? colors.textDisabled : colors.border,
+              width: theme.strokes.regular,
+            ),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<T>(

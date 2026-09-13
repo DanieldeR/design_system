@@ -20,7 +20,7 @@
   height: 20px;
   flex-shrink: 0;
   border-radius: 50%;
-  border: 1.5px solid var(--ds-color-border);
+  border: var(--ds-stroke-heavy) solid var(--ds-color-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,4 +43,18 @@
 
 .ds-radio:disabled .ds-radio__dot {
   background: var(--ds-color-text-disabled);
+}
+
+[data-ds-theme="eink"] .ds-radio {
+  min-height: var(--ds-touch-target);
+}
+
+[data-ds-theme="eink"] .ds-radio__circle {
+  width: 22px;
+  height: 22px;
+}
+
+[data-ds-theme="eink"] .ds-radio__dot {
+  width: 12px;
+  height: 12px;
 }

@@ -24,30 +24,34 @@ class DSCheckbox extends StatelessWidget {
 
     return InkWell(
       onTap: disabled ? null : () => onChanged!(!value),
-      borderRadius: BorderRadius.circular(DSRadius.sm),
+      borderRadius: BorderRadius.circular(theme.shape.sm),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: DSSpacing.xs),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Duration is zero under the e-ink theme, which collapses
+            // this to a plain Container's behaviour — the box flips
+            // state in the one repaint the panel was going to do
+            // anyway, instead of asking for a 120ms run of them.
             AnimatedContainer(
-              duration: const Duration(milliseconds: 120),
-              width: 20,
-              height: 20,
+              duration: theme.motion.fast,
+              width: 22,
+              height: 22,
               decoration: BoxDecoration(
                 color: value
                     ? (disabled ? colors.textDisabled : colors.brand)
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(DSRadius.sm),
+                borderRadius: BorderRadius.circular(theme.shape.sm),
                 border: Border.all(
                   color: value
                       ? Colors.transparent
                       : (disabled ? colors.textDisabled : colors.border),
-                  width: 1.5,
+                  width: theme.strokes.heavy,
                 ),
               ),
               child: value
-                  ? Icon(Icons.check, size: 14, color: colors.onBrand)
+                  ? Icon(Icons.check, size: 16, color: colors.onBrand)
                   : null,
             ),
             if (label != null) ...[

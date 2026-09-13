@@ -56,6 +56,29 @@ abstract final class DSPalette {
   static const Color danger100 = Color(0xFFECDAD7);
   static const Color info500 = Color(0xFF4A6FA5);
   static const Color info100 = Color(0xFFDDE5F0);
+
+  // Ink (e-ink greyscale ramp)
+  //
+  // An E Ink Carta panel can address exactly 16 grey levels, evenly
+  // spaced at multiples of 17 (0, 17, 34 … 255). Every value below
+  // lands on one of them — which is why each is a repeated hex digit —
+  // so the controller reproduces it directly instead of dithering it
+  // out of two neighbouring levels. A colour that misses the ramp is
+  // approximated with a pixel pattern, and that pattern is what
+  // smears into the next frame as ghosting.
+  //
+  // Only alternating levels are exposed. Adjacent levels (e.g. #DDDDDD
+  // vs #EEEEEE) are not reliably distinguishable at arm's length under
+  // reflected light, so offering both would invite hierarchies the
+  // reader cannot actually see.
+  static const Color ink0 = Color(0xFF000000); // L0  full ink
+  static const Color ink3 = Color(0xFF333333); // L3  secondary ink
+  static const Color ink5 = Color(0xFF555555); // L5  heavy fill
+  static const Color ink7 = Color(0xFF777777); // L7  disabled ink
+  static const Color ink9 = Color(0xFF999999); // L9  strong rule
+  static const Color ink11 = Color(0xFFBBBBBB); // L11 hairline rule
+  static const Color ink13 = Color(0xFFDDDDDD); // L13 wash fill
+  static const Color ink15 = Color(0xFFFFFFFF); // L15 paper
 }
 
 /// Semantic color roles resolved for the current theme brightness.
@@ -136,5 +159,48 @@ class DSColorScheme {
     danger: Color(0xFFC06E60),
     info: Color(0xFF6F93C9),
     overlay: Color(0x99000000),
+  );
+
+  /// The e-ink scheme: black ink on white paper, plus three greys.
+  ///
+  /// Three deliberate collapses happen here, and they are collapses —
+  /// not translations. Each one loses a channel the emissive themes
+  /// rely on, and the component layer has to make up the difference:
+  ///
+  /// 1. **[brand] and [accent] are the same ink.** A monochrome panel
+  ///    cannot carry two peer emphasis colours. Navy-vs-copper becomes
+  ///    filled-vs-ruled at the component level.
+  /// 2. **[success], [warning], [danger] and [info] are the same ink.**
+  ///    Status has to be spoken, not tinted — pair every semantic
+  ///    surface with a glyph and a word. Salience is expressed by
+  ///    inversion, not hue.
+  /// 3. **[overlay] is opaque paper, not a scrim.** A translucent
+  ///    black wash over a page is a large field of mid-grey: the worst
+  ///    case for both contrast and ghosting. A modal replaces the page
+  ///    rather than dimming it — the print analogy is turning to a new
+  ///    page, not holding a filter over the old one.
+  ///
+  /// The page is white and the ink is black, never the reverse.
+  /// Inverting it (dark mode) means the panel holds most of its
+  /// pigment in the dark state, which both costs more of the refresh
+  /// budget and makes residue from the previous frame far more
+  /// visible. There is no e-ink dark theme for that reason.
+  static const DSColorScheme eInk = DSColorScheme(
+    brand: DSPalette.ink0,
+    onBrand: DSPalette.ink15,
+    accent: DSPalette.ink0,
+    onAccent: DSPalette.ink15,
+    surface: DSPalette.ink15,
+    surfaceVariant: DSPalette.ink13,
+    background: DSPalette.ink15,
+    border: DSPalette.ink0,
+    textPrimary: DSPalette.ink0, // 21:1 on paper
+    textSecondary: DSPalette.ink3, // 12.6:1 — still comfortably AAA
+    textDisabled: DSPalette.ink7, // 4.5:1 — reads as "off", stays legible
+    success: DSPalette.ink0,
+    warning: DSPalette.ink0,
+    danger: DSPalette.ink0,
+    info: DSPalette.ink0,
+    overlay: DSPalette.ink15,
   );
 }

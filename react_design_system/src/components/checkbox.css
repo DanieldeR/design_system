@@ -20,11 +20,12 @@
   height: 20px;
   flex-shrink: 0;
   border-radius: var(--ds-radius-sm);
-  border: 1.5px solid var(--ds-color-border);
+  border: var(--ds-stroke-heavy) solid var(--ds-color-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.12s ease, border-color 0.12s ease;
+  transition: background-color var(--ds-motion-fast) ease,
+    border-color var(--ds-motion-fast) ease;
 }
 
 .ds-checkbox__box svg {
@@ -44,4 +45,19 @@
 
 .ds-checkbox--checked:disabled .ds-checkbox__box {
   background: var(--ds-color-text-disabled);
+}
+
+/* Larger box, larger tick, larger hit area — see --ds-touch-target. */
+[data-ds-theme="eink"] .ds-checkbox {
+  min-height: var(--ds-touch-target);
+}
+
+[data-ds-theme="eink"] .ds-checkbox__box {
+  width: 22px;
+  height: 22px;
+}
+
+[data-ds-theme="eink"] .ds-checkbox__box svg {
+  width: 16px;
+  height: 16px;
 }

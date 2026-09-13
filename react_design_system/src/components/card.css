@@ -1,6 +1,6 @@
 .ds-card {
   background: var(--ds-color-surface);
-  border: 1px solid var(--ds-color-border);
+  border: var(--ds-stroke-regular) solid var(--ds-color-border);
   border-radius: var(--ds-radius-lg);
   padding: var(--ds-space-lg);
   text-align: left;
@@ -15,5 +15,11 @@ button.ds-card {
   width: 100%;
   cursor: pointer;
   font-family: var(--ds-font-family-body);
-  transition: box-shadow 0.12s ease;
+  transition: box-shadow var(--ds-motion-fast) ease;
+}
+
+/* On e-ink `--ds-elevation-3` resolves to `none`, so "elevated" has to
+ * say the same thing in the one channel left: a heavier outline. */
+[data-ds-theme="eink"] .ds-card--elevated {
+  border-width: var(--ds-stroke-heavy);
 }

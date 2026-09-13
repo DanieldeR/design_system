@@ -12,6 +12,15 @@ enum DSButtonSize { small, medium, large }
 /// Use [variant] to pick the emphasis level and [size] to pick the
 /// density. Pass [icon] to render a leading icon, and set [onPressed]
 /// to `null` to render a disabled button.
+///
+/// Two things change under the e-ink theme. **Ghost gains an outline**:
+/// on an emissive panel a bare label reads as a button because it
+/// picks up a hover and a ripple, and neither exists on paper — an
+/// unruled label there is indistinguishable from body text. And
+/// **[loading] renders a static glyph rather than a spinner**: an
+/// indeterminate spinner never stops asking the panel to repaint, so
+/// it holds the refresh pipeline busy for as long as it is mounted,
+/// which is exactly when the app is least able to afford it.
 class DSButton extends StatelessWidget {
   const DSButton({
     super.key,
@@ -56,12 +65,22 @@ class DSButton extends StatelessWidget {
     final colors = theme.colors;
     final disabled = onPressed == null || loading;
 
+    // The filled variants grey out by swapping their fill for
+    // `border`. That works while `border` is a light grey, but the
+    // e-ink scheme's border role is full black — so a disabled button
+    // would render as the single loudest element on the page, which is
+    // the exact opposite of what "disabled" means. On paper it greys
+    // out to the wash fill instead.
+    final Color disabledFill = theme.isEInk
+        ? colors.surfaceVariant
+        : colors.border;
+
     final (Color background, Color foreground, Color? borderColor) =
         switch (variant) {
           DSButtonVariant.primary => (
-            disabled ? colors.border : colors.brand,
+            disabled ? disabledFill : colors.brand,
             disabled ? colors.textDisabled : colors.onBrand,
-            null,
+            disabled && theme.isEInk ? colors.textDisabled : null,
           ),
           DSButtonVariant.secondary => (
             disabled ? colors.surfaceVariant : colors.surfaceVariant,
@@ -76,21 +95,25 @@ class DSButton extends StatelessWidget {
           DSButtonVariant.ghost => (
             Colors.transparent,
             disabled ? colors.textDisabled : colors.textPrimary,
-            null,
+            theme.isEInk
+                ? (disabled ? colors.textDisabled : colors.border)
+                : null,
           ),
           DSButtonVariant.danger => (
-            disabled ? colors.border : colors.danger,
+            disabled ? disabledFill : colors.danger,
             disabled ? colors.textDisabled : colors.onBrand,
-            null,
+            disabled && theme.isEInk ? colors.textDisabled : null,
           ),
         };
 
+    final radius = BorderRadius.circular(theme.shape.md);
+
     final button = Material(
       color: background,
-      borderRadius: BorderRadius.circular(DSRadius.md),
+      borderRadius: radius,
       child: InkWell(
         onTap: disabled ? null : onPressed,
-        borderRadius: BorderRadius.circular(DSRadius.md),
+        borderRadius: radius,
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: _horizontalPadding,
@@ -99,22 +122,28 @@ class DSButton extends StatelessWidget {
           decoration: borderColor == null
               ? null
               : BoxDecoration(
-                  border: Border.all(color: borderColor),
-                  borderRadius: BorderRadius.circular(DSRadius.md),
+                  border: Border.all(
+                    color: borderColor,
+                    width: theme.strokes.regular,
+                  ),
+                  borderRadius: radius,
                 ),
           child: Row(
             mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (loading) ...[
-                SizedBox(
-                  width: 14,
-                  height: 14,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation(foreground),
-                  ),
-                ),
+                if (theme.motion.enabled)
+                  SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation(foreground),
+                    ),
+                  )
+                else
+                  Icon(Icons.hourglass_empty, size: 16, color: foreground),
                 const SizedBox(width: DSSpacing.sm),
               ] else if (icon != null) ...[
                 Icon(icon, size: 16, color: foreground),

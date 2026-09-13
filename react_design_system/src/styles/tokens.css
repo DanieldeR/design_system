@@ -114,6 +114,43 @@
   --ds-palette-info-500: #4a6fa5;
   --ds-palette-info-100: #dde5f0;
 
+  /* Palette — ink (e-ink greyscale ramp)
+   *
+   * An E Ink Carta panel addresses exactly 16 grey levels, evenly
+   * spaced at multiples of 17 — which is why every value below is a
+   * repeated hex digit. A colour that misses the ramp is approximated
+   * with a dither pattern, and that pattern is what smears into the
+   * next frame as ghosting. Only alternating levels are exposed:
+   * neighbouring levels are not reliably distinguishable at arm's
+   * length under reflected light. */
+  --ds-palette-ink-0: #000000;
+  --ds-palette-ink-3: #333333;
+  --ds-palette-ink-5: #555555;
+  --ds-palette-ink-7: #777777;
+  --ds-palette-ink-9: #999999;
+  --ds-palette-ink-11: #bbbbbb;
+  --ds-palette-ink-13: #dddddd;
+  --ds-palette-ink-15: #ffffff;
+
+  /* Stroke weights.
+   *
+   * On an emissive panel, hierarchy between surfaces is carried by
+   * shadow. E-ink cannot render a soft shadow without turning it into
+   * a band of ghosting grey, so there stroke weight becomes the
+   * elevation channel and these steps widen. */
+  --ds-stroke-hairline: 1px;
+  --ds-stroke-regular: 1px;
+  --ds-stroke-heavy: 1.5px;
+  --ds-stroke-emphasis: 2px;
+
+  /* Motion. Zeroed wholesale by the e-ink theme. */
+  --ds-motion-fast: 0.12s;
+  --ds-motion-normal: 0.2s;
+  --ds-motion-slow: 0.32s;
+
+  /* Minimum hit-target size. */
+  --ds-touch-target: 48px;
+
   /* Spacing scale (4px base unit) */
   --ds-space-none: 0px;
   --ds-space-xs: 4px;
@@ -185,4 +222,94 @@
   --ds-color-danger: #c06e60;
   --ds-color-info: #6f93c9;
   --ds-color-overlay: rgba(0, 0, 0, 0.6);
+}
+
+/* Semantic color roles — e-ink
+ *
+ * Mirrors DSColorScheme.eInk / DSShape.eInk / DSStrokes.eInk /
+ * DSMotion.none in the Flutter twin. This is not "light mode in grey":
+ * three channels the emissive themes rely on are gone, and the
+ * component layer makes up the difference.
+ *
+ *  1. brand and accent are the same ink. A monochrome panel cannot
+ *     carry two peer emphasis colours — navy-vs-copper becomes
+ *     filled-vs-ruled.
+ *  2. success / warning / danger / info are the same ink. Status has
+ *     to be spoken, not tinted. Salience comes from inversion.
+ *  3. overlay is opaque paper, not a scrim. A translucent black wash
+ *     is a large field of mid-grey: simultaneously the lowest-contrast
+ *     tone, the slowest to settle, and the most visible source of
+ *     residue when it clears. A modal replaces the page rather than
+ *     dimming it.
+ *
+ * There is deliberately no dark e-ink theme. Inverting means the panel
+ * holds most of its pigment in the dark state, which costs more of the
+ * refresh budget and makes residue from the previous frame far more
+ * visible. */
+[data-ds-theme="eink"] {
+  --ds-color-brand: var(--ds-palette-ink-0);
+  --ds-color-on-brand: var(--ds-palette-ink-15);
+  --ds-color-accent: var(--ds-palette-ink-0);
+  --ds-color-on-accent: var(--ds-palette-ink-15);
+  --ds-color-surface: var(--ds-palette-ink-15);
+  --ds-color-surface-variant: var(--ds-palette-ink-13);
+  --ds-color-background: var(--ds-palette-ink-15);
+  --ds-color-border: var(--ds-palette-ink-0);
+  --ds-color-text-primary: var(--ds-palette-ink-0); /* 21:1 on paper */
+  --ds-color-text-secondary: var(--ds-palette-ink-3); /* 12.6:1 */
+  --ds-color-text-disabled: var(--ds-palette-ink-7); /* 4.5:1 */
+  --ds-color-success: var(--ds-palette-ink-0);
+  --ds-color-warning: var(--ds-palette-ink-0);
+  --ds-color-danger: var(--ds-palette-ink-0);
+  --ds-color-info: var(--ds-palette-ink-0);
+  --ds-color-overlay: var(--ds-palette-ink-15);
+
+  /* Squared off. Every curved edge is drawn by antialiasing it into
+   * intermediate greys, and those in-between tones are the first
+   * pixels to smear on a partial refresh. Pills keep their radius —
+   * a fully-round end reads as a shape, not as an artifact. */
+  --ds-radius-sm: 0px;
+  --ds-radius-md: 0px;
+  --ds-radius-lg: 0px;
+  --ds-radius-xl: 0px;
+
+  /* No shadows exist here. Weight carries elevation instead. */
+  --ds-elevation-1: none;
+  --ds-elevation-2: none;
+  --ds-elevation-3: none;
+  --ds-elevation-4: none;
+
+  /* Widened, and the gaps between steps widened more, because weight
+   * is now carrying meaning colour used to carry. */
+  --ds-stroke-hairline: 1px;
+  --ds-stroke-regular: 1.5px;
+  --ds-stroke-heavy: 2px;
+  --ds-stroke-emphasis: 3px;
+
+  --ds-motion-fast: 0s;
+  --ds-motion-normal: 0s;
+  --ds-motion-slow: 0s;
+
+  /* E-ink gives no immediate feedback that a tap landed: no ripple,
+   * and the confirming repaint can be 300ms away. A missed tap costs
+   * the user a full second before they even know they missed it, so
+   * targets grow past the usual 48px. */
+  --ds-touch-target: 56px;
+}
+
+/* The motion kill switch.
+ *
+ * A transition on an electrophoretic panel is not a transition — it is
+ * a burst of partial refreshes, each leaving residue, resolving some
+ * time after the gesture ended. This catches consumer CSS and any
+ * component rule that forgets to route through --ds-motion-*. Blunt on
+ * purpose: there is no such thing as an animation worth keeping here. */
+[data-ds-theme="eink"],
+[data-ds-theme="eink"] *,
+[data-ds-theme="eink"] *::before,
+[data-ds-theme="eink"] *::after {
+  transition-duration: 0s !important;
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
 }

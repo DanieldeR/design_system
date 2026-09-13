@@ -59,16 +59,25 @@ function Gallery() {
           Design System Gallery
         </h1>
         <button
-          onClick={() => setBrightness(brightness === "light" ? "dark" : "light")}
+          onClick={() =>
+            setBrightness(
+              brightness === "light"
+                ? "dark"
+                : brightness === "dark"
+                  ? "eink"
+                  : "light",
+            )
+          }
           style={{
             border: "none",
             background: "none",
             cursor: "pointer",
             fontSize: 20,
+            color: "var(--ds-color-text-primary)",
           }}
-          aria-label="Toggle theme"
+          aria-label={`Theme: ${brightness}. Click to cycle.`}
         >
-          {brightness === "light" ? "☽" : "☀"}
+          {brightness === "light" ? "☽" : brightness === "dark" ? "▤" : "☀"}
         </button>
       </div>
 

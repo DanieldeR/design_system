@@ -16,16 +16,16 @@
   gap: var(--ds-space-sm);
   width: 100%;
   background: var(--ds-color-surface);
-  border: 1px solid var(--ds-color-border);
+  border: var(--ds-stroke-regular) solid var(--ds-color-border);
   border-radius: var(--ds-radius-md);
   padding: var(--ds-space-md);
-  transition: border-color 0.12s ease;
+  min-height: var(--ds-touch-target);
+  transition: border-color var(--ds-motion-fast) ease;
 }
 
 .ds-input-field__control:focus-within {
   border-color: var(--ds-color-accent);
-  border-width: 1.5px;
-  padding: calc(var(--ds-space-md) - 0.5px);
+  border-width: var(--ds-stroke-heavy);
 }
 
 .ds-input-field--error .ds-input-field__control {
@@ -67,4 +67,29 @@
 
 .ds-input-field--error .ds-input-field__helper {
   color: var(--ds-color-danger);
+}
+
+/* Resting, focused and errored are three colours on an emissive panel
+ * and one colour on e-ink, so there they become three weights. Three
+ * steps is the most a reader can reliably tell apart on paper, which is
+ * also why there is no fourth state. */
+[data-ds-theme="eink"] .ds-input-field--error .ds-input-field__control,
+[data-ds-theme="eink"]
+  .ds-input-field--error
+  .ds-input-field__control:focus-within {
+  border-width: var(--ds-stroke-emphasis);
+}
+
+/* The error ink and the helper ink are identical here, so the message
+ * has to say which one it is rather than just being red. */
+[data-ds-theme="eink"] .ds-input-field--error .ds-input-field__helper {
+  font-weight: 700;
+}
+
+/* Placeholder grey is the one thing this theme is trying to keep out of
+ * a field. Put the format in the label ("Date — YYYY-MM-DD") rather
+ * than ghosting it into the input. */
+[data-ds-theme="eink"] .ds-input-field__input::placeholder {
+  color: var(--ds-color-text-secondary);
+  font-style: italic;
 }

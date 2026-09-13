@@ -31,3 +31,25 @@
 .ds-toast--danger {
   background: var(--ds-color-danger);
 }
+
+/* A toast is a poor fit for e-ink and this makes it a less bad one
+ * rather than pretending otherwise. It costs two unprompted repaints at
+ * moments the user did not ask for, and the second can easily land
+ * while they are reading something else. Docking it to the bottom edge
+ * keeps the dirty rectangle small and drops the shadow.
+ *
+ * All four tones render identically — inverted ink. Put the severity in
+ * the message. For anything the user must not miss, prefer a modal or
+ * inline text on the surface that caused it. */
+[data-ds-theme="eink"] .ds-toast-viewport {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: none;
+}
+
+[data-ds-theme="eink"] .ds-toast {
+  width: 100%;
+  white-space: normal;
+  border-top: var(--ds-stroke-regular) solid var(--ds-color-border);
+}

@@ -15,7 +15,7 @@
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.12s ease;
+  transition: opacity var(--ds-motion-fast) ease;
   z-index: 100;
 }
 
@@ -23,3 +23,9 @@
 .ds-tooltip:focus-within .ds-tooltip__bubble {
   opacity: 1;
 }
+
+/* Treat tooltips as desktop-only regardless of theme. On a touch-only
+ * reader the only way to reach one is a long press — the same gesture
+ * most of this system uses for a primary action — so a tooltip is
+ * either unreachable or in the way. Anything the user genuinely needs
+ * belongs in a visible label. */

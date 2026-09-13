@@ -91,3 +91,92 @@
   letter-spacing: 0.2px;
   margin: 0;
 }
+
+/*
+ * E-ink type scale — mirrors DSTypography.eInk in the Flutter twin.
+ *
+ * Four systematic changes, each with a physical cause:
+ *
+ *  - Every body size goes up ~2px and 12px disappears. An emissive
+ *    panel leans on subpixel rendering to hold small glyphs together;
+ *    a monochrome e-ink panel has no colour subpixels to borrow, so
+ *    small text is antialiased in grey instead — and those grey edge
+ *    pixels are both lower-contrast under reflected light and the
+ *    first thing to ghost.
+ *  - Every weight goes up one step. Thin strokes are the failure mode
+ *    of electrophoretic ink: a stem that renders as a partly-charged
+ *    pixel reads grey, not black.
+ *  - Line-height goes up ~10%. More paper between rows means fewer
+ *    adjacent pixels flipping state, which visibly reduces smearing.
+ *  - Negative tracking is removed and small sizes gain positive
+ *    tracking. Tight letterfit lets neighbouring glyph edges bleed
+ *    into each other once ink spreads a fraction of a pixel.
+ *
+ * The two-typeface brand split survives, against the usual "no serifs
+ * on e-ink" advice, because that advice targets 150-200 PPI panels. At
+ * the 300 PPI this theme assumes, Playfair's hairlines still land on
+ * 2-3 device pixels. .ds-text-heading-small is the exception — at 16px
+ * they finally drop under a pixel, so it moves to the body face. On a
+ * panel below ~250 PPI, move the whole display family across.
+ */
+
+[data-ds-theme="eink"] .ds-text-display-large {
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+[data-ds-theme="eink"] .ds-text-display-medium {
+  line-height: 1.313;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+[data-ds-theme="eink"] .ds-text-heading-large {
+  line-height: 1.417;
+  font-weight: 800;
+}
+
+[data-ds-theme="eink"] .ds-text-heading-medium {
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+[data-ds-theme="eink"] .ds-text-heading-small {
+  font-family: var(--ds-font-family-body);
+  font-size: 18px;
+  line-height: 1.444;
+  font-weight: 700;
+}
+
+[data-ds-theme="eink"] .ds-text-body-large {
+  font-size: 18px;
+  line-height: 1.556;
+  font-weight: 500;
+}
+
+[data-ds-theme="eink"] .ds-text-body-medium {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+[data-ds-theme="eink"] .ds-text-body-small {
+  font-size: 14px;
+  line-height: 1.429;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+
+[data-ds-theme="eink"] .ds-text-label {
+  font-size: 14px;
+  line-height: 1.286;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+[data-ds-theme="eink"] .ds-text-caption {
+  font-size: 12px;
+  line-height: 1.333;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}

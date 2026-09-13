@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../tokens/ds_colors.dart';
+import '../tokens/ds_surface.dart';
 import '../tokens/ds_typography.dart';
 
 /// The full set of design tokens for one theme (light or dark).
@@ -10,11 +11,35 @@ class DSThemeData {
     required this.colors,
     this.typography = DSTypography.standard,
     this.brightness = Brightness.light,
+    this.surfaceMode = DSSurfaceMode.emissive,
+    this.shape = DSShape.standard,
+    this.strokes = DSStrokes.standard,
+    this.motion = DSMotion.standard,
+    this.minTouchTarget = DSTouchTarget.standard,
   });
 
   final DSColorScheme colors;
   final DSTypography typography;
   final Brightness brightness;
+
+  /// The class of display this theme is drawn on. Components branch on
+  /// this for the handful of decisions that cannot be expressed as a
+  /// token value — see [isEInk].
+  final DSSurfaceMode surfaceMode;
+
+  final DSShape shape;
+  final DSStrokes strokes;
+  final DSMotion motion;
+  final double minTouchTarget;
+
+  /// True when this theme targets an electrophoretic panel.
+  ///
+  /// Prefer reading [shape], [strokes], [motion] and [colors] — they
+  /// already carry the e-ink values. Branch on this flag only for
+  /// structural differences a token cannot express: swapping a
+  /// spinner for a static glyph, collapsing badge tones to salience
+  /// levels, replacing a scrim with an opaque page.
+  bool get isEInk => surfaceMode == DSSurfaceMode.eInk;
 
   static const DSThemeData light = DSThemeData(
     colors: DSColorScheme.light,
@@ -26,15 +51,43 @@ class DSThemeData {
     brightness: Brightness.dark,
   );
 
+  /// The e-ink theme.
+  ///
+  /// Note it reports [Brightness.light]: the panel is paper, and every
+  /// platform affordance that keys off brightness (text selection
+  /// handles, status-bar icons, autofill overlays) should assume dark
+  /// content on a light ground. There is deliberately no dark e-ink
+  /// theme — see [DSColorScheme.eInk].
+  static const DSThemeData eInk = DSThemeData(
+    colors: DSColorScheme.eInk,
+    typography: DSTypography.eInk,
+    brightness: Brightness.light,
+    surfaceMode: DSSurfaceMode.eInk,
+    shape: DSShape.eInk,
+    strokes: DSStrokes.eInk,
+    motion: DSMotion.none,
+    minTouchTarget: DSTouchTarget.eInk,
+  );
+
   DSThemeData copyWith({
     DSColorScheme? colors,
     DSTypography? typography,
     Brightness? brightness,
+    DSSurfaceMode? surfaceMode,
+    DSShape? shape,
+    DSStrokes? strokes,
+    DSMotion? motion,
+    double? minTouchTarget,
   }) {
     return DSThemeData(
       colors: colors ?? this.colors,
       typography: typography ?? this.typography,
       brightness: brightness ?? this.brightness,
+      surfaceMode: surfaceMode ?? this.surfaceMode,
+      shape: shape ?? this.shape,
+      strokes: strokes ?? this.strokes,
+      motion: motion ?? this.motion,
+      minTouchTarget: minTouchTarget ?? this.minTouchTarget,
     );
   }
 
@@ -61,8 +114,46 @@ class DSThemeData {
       scaffoldBackgroundColor: colors.background,
       fontFamily: typography.bodyFontFamily,
       useMaterial3: true,
+      // On e-ink these three are not decoration — they are repaint
+      // requests. A ripple is ~300ms of partial refreshes chasing a
+      // finger that has already lifted; the panel is still catching up
+      // with the splash when the next screen arrives. Hover has no
+      // meaning on a touch-only reader and only fires spuriously.
+      splashFactory: isEInk ? NoSplash.splashFactory : null,
+      splashColor: isEInk ? const Color(0x00000000) : null,
+      highlightColor: isEInk ? const Color(0x00000000) : null,
+      hoverColor: isEInk ? const Color(0x00000000) : null,
+      // Route transitions are the single largest source of wasted
+      // refresh on an e-ink device: a slide or fade repaints the whole
+      // screen many times to arrive somewhere it could have arrived in
+      // one. Cut straight to the destination.
+      pageTransitionsTheme: isEInk
+          ? const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: _NoPageTransitionsBuilder(),
+                TargetPlatform.iOS: _NoPageTransitionsBuilder(),
+                TargetPlatform.linux: _NoPageTransitionsBuilder(),
+                TargetPlatform.macOS: _NoPageTransitionsBuilder(),
+                TargetPlatform.windows: _NoPageTransitionsBuilder(),
+              },
+            )
+          : null,
     );
   }
+}
+
+/// Hands back the destination page with no interpolation at all.
+class _NoPageTransitionsBuilder extends PageTransitionsBuilder {
+  const _NoPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) => child;
 }
 
 /// Provides [DSThemeData] to the widget subtree. Wrap your app's root
